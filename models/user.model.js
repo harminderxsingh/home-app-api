@@ -9,11 +9,11 @@ const User = sequelize.define('User', {
         autoIncrement: true,
         primaryKey: true
     },
-    community: {
+    fullName: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    fullName: {
+    community: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -29,17 +29,13 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    pinCode: {
+    customerNumber: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    email: {
+    password: {
         type: DataTypes.STRING,
-        allowNull: true
-    },
-    facebookId: {
-        type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false
     }
 }, {
     timestamps: true

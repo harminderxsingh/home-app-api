@@ -90,4 +90,30 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { signup, login };
+const updateProfile = async (req, res) => {
+    const { occupation, age, interests, householdSize, pets, accessibility } = req.body;
+    const { id } = req.user
+    try {
+        // Check if user already exists
+        let user = await User.findByPk(id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        await user.update({
+            occupation,
+            age,
+            interests,
+            householdSize,
+            pets,
+            accessibility,
+        });
+
+        // Respond with user data and token
+        res.status(200).json({ user });
+    } catch (err) {
+        res.status(500).json({ message: 'An error occurred while updating the profile', error: err.message });
+    }
+};
+
+module.exports = { signup, login, updateProfile };

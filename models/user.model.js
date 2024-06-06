@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
 
-const SECRET_KEY = process.env.SECRET_KEY || 'your_jwt_secret_key';
+const SECRET_KEY = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
 const User = sequelize.define('User', {
     id: {
@@ -32,6 +32,34 @@ const User = sequelize.define('User', {
     customerNumber: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    picture: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    occupation: {
+        type: DataTypes.STRING,
+        defaultValue: '',
+    },
+    age: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    interests: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    householdSize: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    pets: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    accessibility: {
+        type: DataTypes.TEXT,
+        allowNull: true,
     },
     password: {
         type: DataTypes.STRING,

@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const jwt = require('jsonwebtoken');
 const sequelize = require('../config/db.config');
 
 const SECRET_KEY = process.env.JWT_SECRET || 'your_jwt_secret_key';
@@ -13,8 +14,8 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    community: {
-        type: DataTypes.STRING,
+    communityId: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     houseNo: {
@@ -23,7 +24,7 @@ const User = sequelize.define('User', {
     },
     countryCode: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     phone: {
         type: DataTypes.STRING,
@@ -69,8 +70,16 @@ const User = sequelize.define('User', {
     timestamps: true
 });
 
+// Custom instance method to get user data as JSON without password field
+User.prototype.toJSON = function () {
+    const values = Object.assign({}, this.get());
+    delete values.password;
+    return values;
+};
+
+// Instance method to generate JWT token
 User.prototype.generateJwtToken = function () {
     return jwt.sign({ id: this.id, fullName: this.fullName }, SECRET_KEY, { expiresIn: '1h' });
 };
 
-module.exports = User
+module.exports = User;

@@ -1,11 +1,13 @@
-const sequelize = require("./config/db.config");
 require("dotenv").config();
+const sequelize = require("./config/db.config");
 const express = require("express");
 const authRouter = require('./routes/auth');
 const communityRouter = require('./routes/community');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(express.json({ limit: '50mb' }))
 
 app.get("/", (req, res) => {
   res.send("App is working ⚡");

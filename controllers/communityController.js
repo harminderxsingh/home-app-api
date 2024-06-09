@@ -1,5 +1,5 @@
-const db = require("../models");
-const Community = db.community;
+const { Community } = require("../models");
+
 
 const getCommunities = async (req, res) => {
   try {

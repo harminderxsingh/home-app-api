@@ -1,6 +1,7 @@
-const axios = require('axios');
-const db = require("../models");
-const User = db.user;
+const bcrypt = require('bcrypt')
+const { User } = require("../models");
+const { sendPassword } = require('../services/smsService');
+
 
 // const facebookLogin = async (req, res) => {
 //     const { accessToken } = req.body;
@@ -32,16 +33,17 @@ const User = db.user;
 // };
 
 const signup = async (req, res) => {
-    const { community, fullName, houseNo, countryCode, phone, customerNumber } = req.body;
+    const { communityId, fullName, houseNo, countryCode, phone, customerNumber } = req.body;
 
     try {
         // Check if user already exists
-        let user = await User.findOne({ where: { community, houseNo } });
+        let user = await User.findOne({ where: { communityId, houseNo } });
         if (user) {
             return res.status(400).json({ message: 'User already exists with this house number' });
         }
 
-        const password = (Math.floor(1000 + Math.random() * 9000)).toString();
+        // const password = (Math.floor(1000 + Math.random() * 9000)).toString();
+        const password = '1234';
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -49,27 +51,28 @@ const signup = async (req, res) => {
         // Create a new user
         user = await User.create({
             fullName,
-            community,
+            communityId,
             houseNo,
             countryCode,
             phone,
             customerNumber,
             password: hashedPassword,
         });
-
+        sendPassword(phone, password)
         // Respond with user data and token
-        res.status(201).json({ user });
+        res.status(201).json({ user: user.toJSON() });
     } catch (err) {
+        console.error(err)
         res.status(500).json({ message: 'Error signing up user', error: err.message });
     }
 };
 
 const login = async (req, res) => {
-    const { community, houseNo, password } = req.body;
+    const { communityId, houseNo, password } = req.body;
 
     try {
         // Check if user exists
-        const user = await User.findOne({ where: { community, houseNo } });
+        const user = await User.findOne({ where: { communityId, houseNo } });
         if (!user) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
@@ -84,8 +87,9 @@ const login = async (req, res) => {
         const token = user.generateJwtToken();
 
         // Respond with token
-        res.json({ token });
+        res.json({ token, user: user.toJSON() });
     } catch (err) {
+        console.error(err)
         res.status(500).json({ message: 'Error logging in', error: err.message });
     }
 };
@@ -110,7 +114,7 @@ const updateProfile = async (req, res) => {
         });
 
         // Respond with user data and token
-        res.status(200).json({ user });
+        res.status(200).json({ user: user.toJSON() });
     } catch (err) {
         res.status(500).json({ message: 'An error occurred while updating the profile', error: err.message });
     }

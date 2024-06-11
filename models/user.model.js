@@ -62,6 +62,18 @@ const User = sequelize.define('User', {
         type: DataTypes.TEXT,
         allowNull: true,
     },
+    housePurchasedDate: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    solarPanelCleanedDate: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    septicTankCleanedDate: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
     password: {
         type: DataTypes.STRING,
         allowNull: false

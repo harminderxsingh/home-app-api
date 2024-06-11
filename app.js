@@ -3,6 +3,7 @@ const sequelize = require("./config/db.config");
 const express = require("express");
 const authRouter = require('./routes/auth');
 const communityRouter = require('./routes/community');
+const loanRouter = require('./routes/loan');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +15,7 @@ app.get("/", (req, res) => {
 });
 app.use('/auth', authRouter);
 app.use('/communities', communityRouter);
+app.use('/loan', loanRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);

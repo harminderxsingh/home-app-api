@@ -108,7 +108,6 @@ const updateProfile = async (req, res) => {
             occupation,
             age: isNaN(age) ? null : parseInt(age),
             interests,
-            householdSize,
             householdSize: isNaN(householdSize) ? null : parseInt(householdSize),
             pets,
             accessibility,
@@ -122,4 +121,28 @@ const updateProfile = async (req, res) => {
     }
 };
 
-module.exports = { signup, login, updateProfile };
+const updateNotification = async (req, res) => {
+    const { housePurchasedDate, solarPanelCleanedDate, septicTankCleanedDate } = req.body;
+    const { id } = req.user
+    try {
+        // Check if user already exists
+        let user = await User.findByPk(id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        await user.update({
+            housePurchasedDate,
+            solarPanelCleanedDate,
+            septicTankCleanedDate,
+        });
+
+        // Respond with user data and token
+        res.status(200).json({ user: user.toJSON() });
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: 'An error occurred while updating the profile', error: err.message });
+    }
+};
+
+module.exports = { signup, login, updateProfile, updateNotification };

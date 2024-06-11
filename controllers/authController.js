@@ -106,9 +106,10 @@ const updateProfile = async (req, res) => {
 
         await user.update({
             occupation,
-            age,
+            age: isNaN(age) ? null : parseInt(age),
             interests,
             householdSize,
+            householdSize: isNaN(householdSize) ? null : parseInt(householdSize),
             pets,
             accessibility,
         });
@@ -116,6 +117,7 @@ const updateProfile = async (req, res) => {
         // Respond with user data and token
         res.status(200).json({ user: user.toJSON() });
     } catch (err) {
+        console.log(err)
         res.status(500).json({ message: 'An error occurred while updating the profile', error: err.message });
     }
 };

@@ -2,6 +2,11 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
 
 const Loan = sequelize.define('Loan', {
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true,
+    },
     projectId: {
         type: DataTypes.INTEGER,
         allowNull: false

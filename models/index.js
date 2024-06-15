@@ -13,6 +13,9 @@ Community.hasMany(User, { foreignKey: 'communityId', as: 'users' });
 Project.hasMany(Loan, { foreignKey: 'projectId' });
 Loan.belongsTo(Project, { foreignKey: 'projectId' });
 
+User.hasOne(Loan, { foreignKey: 'userId' });
+Loan.belongsTo(User, { foreignKey: 'userId' });
+
 
 module.exports = {
     Community,

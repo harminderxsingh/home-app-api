@@ -25,6 +25,12 @@ exports.createLoan = async (req, res) => {
             bankOfLoan
         } = req.body;
 
+        if (!userId || !projectId || !houseBuyingPrice || !downPaymentAmount ||
+            !loanAmount || !interestOnLoan || !annualRateOfInterest ||
+            !dateLoanStarted || !periodOfLoan || !bankOfLoan) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+
         const existingLoan = await Loan.findOne({ where: { userId } });
 
         let loan;

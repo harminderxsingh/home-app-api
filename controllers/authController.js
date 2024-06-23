@@ -33,7 +33,7 @@ const { sendPassword } = require('../services/smsService');
 // };
 
 const signup = async (req, res) => {
-    const { communityId, fullName, houseNo, countryCode, phone, customerNumber } = req.body;
+    const { communityId, fullName, houseNo, countryCode, phone, customerNumber, password } = req.body;
 
     try {
         // Check if user already exists
@@ -43,7 +43,7 @@ const signup = async (req, res) => {
         }
 
         // const password = (Math.floor(1000 + Math.random() * 9000)).toString();
-        const password = '1234';
+        // const password = '1234';
 
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -59,8 +59,9 @@ const signup = async (req, res) => {
             password: hashedPassword,
         });
         sendPassword(phone, password)
-        // Respond with user data and token
-        res.status(201).json({ user: user.toJSON() });
+        
+        const token = user.generateJwtToken();
+        res.status(201).json({ token, user: user.toJSON() });
     } catch (err) {
         console.error(err)
         res.status(500).json({ message: 'Error signing up user', error: err.message });

@@ -91,7 +91,7 @@ User.prototype.toJSON = function () {
 
 // Instance method to generate JWT token
 User.prototype.generateJwtToken = function () {
-    return jwt.sign({ id: this.id, fullName: this.fullName }, SECRET_KEY, { expiresIn: '6h' });
+    return jwt.sign({ id: this.id, fullName: this.fullName }, SECRET_KEY);
 };
 
 module.exports = User;

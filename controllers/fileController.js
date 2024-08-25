@@ -57,14 +57,13 @@ const uploadFile = async (req, res) => {
 
 const downloadFile = async (req, res) => {
     const { fileId } = req.params;
-    const userId = 1;
     // const userId = req.user.id;
     
     try {
         const file = await File.findOne({
             where: {
                 id: fileId,
-                userId: userId
+                // userId: userId
             }
         });
 
@@ -79,14 +78,13 @@ const downloadFile = async (req, res) => {
 
 const viewFile = async (req, res) => {
     const { fileId } = req.params;
-    const userId = 1;
     // const userId = req.user.id;
 
     try {
         const file = await File.findOne({
             where: {
                 id: fileId,
-                userId: userId
+                // userId: userId
             }
         });
 
@@ -103,10 +101,43 @@ const viewFile = async (req, res) => {
     }
 };
 
+const deleteFile = async (req, res) => {
+    const { fileId } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const file = await File.findOne({
+            where: {
+                id: fileId,
+                userId: userId
+            }
+        });
+
+        if (!file) {
+            return res.status(404).json({ message: 'File not found or access denied' });
+        }
+
+        // Delete the file from the server
+        const filePath = path.join(__dirname, '..', file.path);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+
+        // Remove the file record from the database
+        await file.destroy();
+
+        res.json({ message: 'File deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 
 module.exports = {
     upload,
     uploadFile,
     downloadFile,
     viewFile,
+    deleteFile,
 };
